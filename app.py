@@ -18,7 +18,7 @@ CORS(app)
 # Route for a home page
 @app.route('/')
 def index():
-    return jsonify({"message": "Welcome to the Loan Eligibility Prediction API!"})
+    return jsonify({"message": "Welcome to the Diabetes Prediction API! This service determines whether a patient has diabetes based on health metrics. Integrated with GitHub Actions for CI/CD and deployed on Render, it ensures seamless updates and reliable performance."})
 
 
 # Function to categorize 'age'
@@ -77,11 +77,13 @@ def predictdata():
         # Make predictions
         predictions = predict_pipeline.predict_diabetes(pred_df)
 
-        print(f"result is {predictions[0]}")
+        print(f"result is {predictions[0]}\n")
 
         if(predictions[0] ==0):
+            print("no diabetes")
             return jsonify({"result":"Doesn't have Diabetes"})
         else:
+            print("diabetes")
             return jsonify({"result":"Has Diabetes"})
         
 
