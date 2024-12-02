@@ -81,10 +81,10 @@ def predictdata():
 
         if(predictions[0] ==0):
             print("no diabetes")
-            return jsonify({"result":"Doesn't have Diabetes"})
+            return jsonify({"result":"doesn't have Diabetes"})
         else:
             print("diabetes")
-            return jsonify({"result":"Has Diabetes"})
+            return jsonify({"result":"has Diabetes"})
         
 
     except Exception as e:
