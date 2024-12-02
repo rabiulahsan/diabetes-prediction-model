@@ -75,7 +75,7 @@ def predictdata():
         # Initialize the prediction pipeline and make a prediction
         predict_pipeline = PredictPipeline()
         # Make predictions
-        predictions = predict_pipeline.predict_fraud(pred_df)
+        predictions = predict_pipeline.predict_diabetes(pred_df)
 
         print(f"result is {predictions[0]}")
 
