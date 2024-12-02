@@ -18,36 +18,26 @@ from src.logger import logging
 
 
 
-def evaluate_models(X_train, X_test, y_train, y_test, models, params):
+def evaluate_models(X_train, X_test, y_train, y_test, models):
     try:
         report = {}
         output_dir = "artifacts/models/"
         os.makedirs(output_dir, exist_ok=True)
 
         for model_name, model in models.items():
-            param_grid = params.get(model_name, {})  # Get parameters for the model
-
-            if param_grid:
-                # Perform GridSearchCV with specified parameters
-                gs = GridSearchCV(model, param_grid, cv=3, n_jobs=-1, scoring='accuracy')
-                gs.fit(X_train, y_train)
-                best_model = gs.best_estimator_
-                logging.info(f"Best parameters for {model_name}: {gs.best_params_}")
-            else:
-                # No hyperparameters to tune; use the model as is
-                best_model = model
-                best_model.fit(X_train, y_train)
+            # Train the model directly without GridSearchCV
+            model.fit(X_train, y_train)
 
             # Predict and calculate scores
-            y_train_pred = best_model.predict(X_train)
-            y_test_pred = best_model.predict(X_test)
+            y_train_pred = model.predict(X_train)
+            y_test_pred = model.predict(X_test)
 
             train_model_score = accuracy_score(y_train, y_train_pred)
             test_model_score = accuracy_score(y_test, y_test_pred)
 
             # Save the best model to a file
             model_file_path = os.path.join(output_dir, f"{model_name}_model.pkl")
-            save_object(file_path=model_file_path, obj=best_model)
+            save_object(file_path=model_file_path, obj=model)
 
             # Compute and save confusion matrix
             conf_matrix = confusion_matrix(y_test, y_test_pred)

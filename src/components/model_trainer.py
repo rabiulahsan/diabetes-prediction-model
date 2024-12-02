@@ -35,42 +35,8 @@ class ModelTrainer:
                 "CatBoosting Classifier": CatBoostClassifier(verbose=False),
             }
 
-            params = {
-                "Decision Tree": {
-                    'criterion': ['gini', 'entropy', 'log_loss'],
-                    'splitter': ['best', 'random'],
-                    'max_depth': [None, 10, 20, 30, 40, 50]
-                },
-                "Random Forest": {
-                    'n_estimators': [10, 50, 100, 200],
-                    'max_depth': [None, 10, 20, 30, 40],
-                    'criterion': ['gini', 'entropy']
-                },
-                "Gradient Boosting": {
-                    'learning_rate': [0.1, 0.01, 0.05],
-                    'n_estimators': [10, 50, 100, 200],
-                    'subsample': [0.8, 0.9, 1.0],
-                    'max_depth': [3, 5, 7]
-                },
-                "Logistic Regression": {
-                    'penalty': ['l1', 'l2', 'elasticnet', None],
-                    'C': [0.1, 1.0, 10, 100],
-                    'solver': ['lbfgs', 'saga', 'liblinear']
-                },
-                "XGBClassifier": {
-                    'learning_rate': [0.1, 0.01, 0.05],
-                    'n_estimators': [10, 50, 100, 200],
-                    'max_depth': [3, 5, 7],
-                    'gamma': [0, 0.1, 0.2]
-                },
-                "CatBoosting Classifier": {
-                    'depth': [6, 8, 10],
-                    'learning_rate': [0.01, 0.05, 0.1],
-                    'iterations': [10, 50, 100]
-                },
-            }
 
-            model_report:dict = evaluate_models(X_train, X_test, y_train, y_test, models, params)
+            model_report:dict = evaluate_models(X_train, X_test, y_train, y_test, models)
 
             # Find the best model based on the test score (second element in the tuple)
             best_model_name, (best_train_score, best_test_score) = max(
