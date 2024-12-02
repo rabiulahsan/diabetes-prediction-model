@@ -81,6 +81,7 @@ class DataTransformation:
                 else: return 'Senior'
 
 
+            # Transform ''bmi" into categories
             def categorize_bmi(value):
                 if value < 18.6:
                     return "underweight";
