@@ -67,47 +67,49 @@ class DataTransformation:
         """
         try:
 
-            # Handle missing values in 'age'
-            age_imputer = SimpleImputer(strategy='mean')
-            df['age'] = age_imputer.fit_transform(df[['age']])
+            df = df.drop_duplicates()
 
-            # Drop unnecessary columns
-            drop_col = ['gender', 'dependents']
-            df.drop(columns=drop_col, inplace=True)
+            df['age'] = pd.to_numeric(df['age'], errors='coerce')
 
 
             # Transform 'age' into categories
-            def age_category(age):
-                if age <= 25:
-                    return "Young"
-                elif 26 <= age <= 50:
-                    return "Middle aged"
+            def categorize_age(age):
+                if age < 26:
+                    return "Young";
+                elif age < 51: 
+                    return 'Middle';
+                else: return 'Senior'
+
+
+            def categorize_bmi(value):
+                if value < 18.6:
+                    return "underweight";
+                elif value < 25: 
+                    return 'normal';
+                elif value < 30: 
+                    return 'overweight';
+                else: return 'obesity'
+
+
+            def categorize_smoking(smoking_status):
+                if smoking_status in ['never', 'not current']:
+                    return 'non_smoker'
+                elif smoking_status == 'current':
+                    return 'current_smoker'
+                elif smoking_status in ['former', 'ever']:
+                    return 'former_smoker'
                 else:
-                    return "Senior"
+                    return 'unknown'  # Handle 'No Info'
 
-            def approved_loan(amount):
-                return 1 if amount > 0 else 0
 
-            df['age'] = df['age'].apply(age_category)
+            df['age'] = df['age'].apply(categorize_age)
+            df['bmi'] = df['bmi'].apply(categorize_bmi)
+            df['smoking'] = df['smoking'].apply(categorize_smoking)
 
-            # Handle 'loan_amount' column
-            df['loan_amount'] = df['loan_amount'].replace(['-999', '?'], 0).astype(float)
+            print(df.shape)
+            
 
-            loan_imputer = SimpleImputer(strategy='mean')
-            df['loan_amount'] = loan_imputer.fit_transform(df[['loan_amount']])
-
-            # Create 'approved' column
-            df['approved'] = df['loan_amount'].apply(approved_loan)
-
-            # Debugging: Check the final dataframe
-            # print("Final Data After Adding Features:\n", df.head())
-
-            # Numerical columns to preprocess
-            num_cols = ['income', 'loan_amount_request', 'current_loan', 'credit_score', 'property_price']
-
-            # Replace -999 and '?' with 0 in numerical columns
-            for col in num_cols:
-                df[col] = df[col].replace(['-999', '?'], 0).astype(float)
+            
 
             # print("adding feature complete sucessfully")
             return df
@@ -173,7 +175,7 @@ class DataTransformation:
 
 
 if __name__ =='__main__':
-    raw_data_path = 'notebook\data\loan-prediction-dataset.csv'
+    raw_data_path = 'notebook\data\diabetes-prediction-dataset.csv'
     try:
         # Initialize the DataTransformation class
         data_transformation = DataTransformation()
